@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Code repository dashboard — /Users/dheerajdubey/Documents/code-repository</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --orange: #d29922;
+      --purple: #a371f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #111827 0%, var(--bg) 100%);
+    }
+    h1 { margin: 0 0 0.5rem; font-size: 1.75rem; font-weight: 650; }
+    .sub { color: var(--muted); font-size: 0.95rem; max-width: 72ch; }
+    main { padding: 1.5rem; max-width: 1280px; margin: 0 auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+    .card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .card .val { font-size: 1.65rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .card .hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+    section { margin-bottom: 2.5rem; }
+    section h2 {
+      font-size: 1.15rem;
+      margin: 0 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .diagram-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    .mermaid { text-align: center; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 0.65rem 0.5rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:hover td { background: rgba(56, 139, 253, 0.06); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .badge.yes { border-color: var(--orange); color: var(--orange); }
+    .badge.arch { border-color: var(--purple); color: var(--purple); }
+    .chart-box { height: 320px; position: relative; }
+    .note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+    code { font-size: 0.85em; background: #21262d; padding: 0.1rem 0.35rem; border-radius: 4px; }
+    .doc-links { font-size: 0.82rem; line-height: 1.5; }
+    .doc-links a { display: inline-block; margin-right: 0.35rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Comdex - Code repository dashboard</h1>
+    <br />
+    Generated (UTC): <code>2026-03-28T18:39:02.194901+00:00</code><br />
+    Lines of code from <strong>cloc</strong> with exclusions: dependency folders (<code>node_modules</code>, <code>__pycache__</code>, <code>.git</code>, <code>.venv</code>, etc.), all <code>.json</code> files, and <code>package.json</code> by basename.<br />
+    GitHub metadata: Repos that return 404 show &quot;—&quot; (private, renamed, or removed).</p>
+  </header>
+  <main>
+    <div class="grid">
+      <div class="card"><h3>Repositories</h3><div class="val" id="k-repos">9</div><div class="hint">Git folders under workspace root</div></div>
+      <div class="card"><h3>Code files (cloc)</h3><div class="val" id="k-files">2005</div><div class="hint">After exclusions</div></div>
+      <div class="card"><h3>Lines of code</h3><div class="val" id="k-loc">806,010</div><div class="hint">cloc &quot;code&quot; column</div></div>
+      <div class="card"><h3>Comments</h3><div class="val">38,766</div><div class="hint">cloc comment lines</div></div>
+      <div class="card"><h3>Commits (sum)</h3><div class="val">7,495</div><div class="hint">Per-repo <code>git rev-list --count</code></div></div>
+      <div class="card"><h3>Contributors (approx)</h3><div class="val">62</div><div class="hint">Unique author strings across repos (may double-count)</div></div>
+    </div>
+
+    <section>
+      <h2>System architecture (ecosystem)</h2>
+      <p class="note">High-level view of how these repositories relate within the Comdex stack (chain, modules, WASM contracts, and web frontends). Arrows show primary dependencies or user-facing flows.</p>
+      <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart TB
+  subgraph UsersG["Users and operators"]
+    U["Web / CLI users"]
+  end
+
+  subgraph ChainG["L1 - Cosmos SDK chain"]
+    CD["comdex core chain"]
+  end
+
+  subgraph RWASG["Real-world assets"]
+    RWA_NODE["comdex-rwa"]
+  end
+
+  subgraph WasmG["CosmWasm contracts"]
+    GOV["gov-contracts"]
+    LOCK["locking-contract"]
+    AUC["auctions"]
+  end
+
+  subgraph WebG["React web frontends"]
+    CS["cSwap-frontend"]
+    CM["commodo-frontend"]
+    HB["harbor-frontend"]
+    RW["raw-frontend"]
+  end
+
+  U --> CD
+  CS --> CD
+  CM --> CD
+  HB --> CD
+  RW --> CD
+  CD --> GOV
+  CD --> LOCK
+  CD --> AUC
+  CD --> RWA_NODE
+  GOV --> CD
+  LOCK --> CD
+  AUC --> CD
+  RWA_NODE --> CD
+
+  style ChainG fill:#111827,stroke:#58a6ff
+  style WasmG fill:#111827,stroke:#a371f7
+  style WebG fill:#111827,stroke:#3fb950
+  style RWASG fill:#111827,stroke:#d29922
+</pre>
+      </div>
+      <p class="note">This diagram is descriptive (based on repository names and typical Comdex architecture), not an auto-generated dependency graph.</p>
+    </section>
+
+    <section>
+      <h2>Delivery &amp; runtime view</h2>
+      <p class="note">How changes typically flow from source control to operators and end users (simplified).</p>
+      <div class="diagram-wrap">
+<pre class="mermaid">
+flowchart LR
+  Dev["Developers"] --> GH["GitHub repos"]
+  GH --> CI["CI tests builds"]
+  CI --> Art["Artifacts images WASM"]
+  Art --> Val["Validators chain nodes"]
+  Val --> API["REST gRPC LCD"]
+  API --> FE["Web frontends"]
+  FE --> EndU["End users"]
+
+  style GH fill:#161b22,stroke:#58a6ff
+  style Val fill:#161b22,stroke:#3fb950
+  style FE fill:#161b22,stroke:#a371f7
+</pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>Activity — commits per month (all repos)</h2>
+      <div class="chart-box"><canvas id="chartAll"></canvas></div>
+    </section>
+
+    <section>
+      <h2>Lines of code by repository</h2>
+      <div class="chart-box"><canvas id="chartLoc"></canvas></div>
+    </section>
+
+    <section>
+      <h2>Language mix (aggregated)</h2>
+      <p class="note">Summed cloc &quot;code&quot; lines per language across all repositories (after the same exclusions).</p>
+      <div class="chart-box"><canvas id="chartLang"></canvas></div>
+    </section>
+
+    <section>
+      <h2>Repository details</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Repository</th>
+            <th>Documents</th>
+            <th>GitHub</th>
+            <th>Fork</th>
+            <th>Archived</th>
+            <th>Stars</th>
+            <th>GH forks</th>
+            <th>Commits</th>
+            <th>Contributors</th>
+            <th>Code files</th>
+            <th>LOC</th>
+            <th>Last push (API)</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Per-repository activity (last 24 months)</h2>
+      <div id="perRepoCharts"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "dark", securityLevel: "loose" });
+    await mermaid.run({ querySelector: ".mermaid" });
+  </script>
+
+  <script id="payload" type="application/json">{"generated_at": "2026-03-28T18:39:02.194901+00:00", "root": "/Users/dheerajdubey/Documents/code-repository", "cloc_exclude_dirs": "node_modules,dist,build,.git,__pycache__,.venv,venv,env,target,coverage,.next,.cache,vendor,.cargo,.turbo,.nuxt,out,storybook-static,Pods,.gradle,.idea", "cloc_notes": "Excluded via cloc: listed dirs, all .json, and package.json basenames.", "repo_count": 9, "aggregate": {"repositories": 9, "code_files": 2005, "lines_blank": 65333, "lines_comment": 38766, "lines_code": 806010, "commits_sum_local": 7495, "unique_contributors_across_repos_email": 62, "languages_top": [{"lang": "Go", "code": 442022}, {"lang": "JavaScript", "code": 119228}, {"lang": "YAML", "code": 112115}, {"lang": "SCSS", "code": 51479}, {"lang": "SVG", "code": 40369}, {"lang": "Rust", "code": 21191}, {"lang": "Protocol Buffers", "code": 7469}, {"lang": "HTML", "code": 6081}, {"lang": "Markdown", "code": 2733}, {"lang": "Python", "code": 1271}, {"lang": "Bourne Shell", "code": 995}, {"lang": "TOML", "code": 459}, {"lang": "TypeScript", "code": 290}, {"lang": "make", "code": 217}, {"lang": "Dockerfile", "code": 55}, {"lang": "Text", "code": 21}]}, "repos": [{"name": "auctions", "path": "/Users/dheerajdubey/Documents/code-repository/auctions", "remote": "https://github.com/comdex-official/auctions.git", "owner": "comdex-official", "github_repo": "auctions", "html_url": "https://github.com/comdex-official/auctions", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/auctions/blob/main/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/auctions/README.md", "description": null, "fork": null, "archived": null, "stars": null, "gh_forks": null, "open_issues": null, "pushed_at": null, "created_at": null, "default_branch": null, "n_files": 155, "blank": 1776, "comment": 797, "code": 35625, "commits": 36, "contributors": 7, "by_month": {"2024-04": 5}, "languages": [{"lang": "SVG", "code": 13212, "files": 21}, {"lang": "JavaScript", "code": 13082, "files": 113}, {"lang": "SCSS", "code": 8332, "files": 19}, {"lang": "HTML", "code": 998, "files": 1}, {"lang": "Markdown", "code": 1, "files": 1}]}, {"name": "cSwap-frontend", "path": "/Users/dheerajdubey/Documents/code-repository/cSwap-frontend", "remote": "https://github.com/comdex-official/cSwap-frontend.git", "owner": "comdex-official", "github_repo": "cSwap-frontend", "html_url": "https://github.com/comdex-official/cSwap-frontend", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/cSwap-frontend/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/cSwap-frontend/README.md", "description": null, "fork": false, "archived": false, "stars": 1, "gh_forks": 4, "open_issues": 6, "pushed_at": "2024-09-04T12:53:56Z", "created_at": "2022-07-14T05:57:04Z", "default_branch": "development", "n_files": 163, "blank": 2083, "comment": 202, "code": 30056, "commits": 1115, "contributors": 13, "by_month": {}, "languages": [{"lang": "JavaScript", "code": 13119, "files": 120}, {"lang": "SCSS", "code": 9287, "files": 23}, {"lang": "SVG", "code": 6859, "files": 11}, {"lang": "HTML", "code": 717, "files": 2}, {"lang": "Bourne Shell", "code": 48, "files": 2}, {"lang": "YAML", "code": 14, "files": 1}, {"lang": "Markdown", "code": 6, "files": 1}, {"lang": "Dockerfile", "code": 3, "files": 1}, {"lang": "Text", "code": 3, "files": 1}, {"lang": "TypeScript", "code": 0, "files": 1}]}, {"name": "comdex", "path": "/Users/dheerajdubey/Documents/code-repository/comdex", "remote": "https://github.com/comdex-official/comdex.git", "owner": "comdex-official", "github_repo": "comdex", "html_url": "https://github.com/comdex-official/comdex", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/comdex/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/comdex/README.md", "description": "Comdex: A DeFi infrastructure layer for the Cosmos ecosystem", "fork": false, "archived": false, "stars": 81, "gh_forks": 64, "open_issues": 15, "pushed_at": "2025-02-06T19:00:56Z", "created_at": "2021-07-20T06:09:34Z", "default_branch": "development", "n_files": 852, "blank": 47904, "comment": 31650, "code": 596253, "commits": 2901, "contributors": 44, "by_month": {"2024-03": 2, "2024-04": 4, "2024-05": 1, "2024-06": 20, "2024-07": 6, "2024-08": 1, "2024-10": 2, "2024-11": 5}, "languages": [{"lang": "Go", "code": 442022, "files": 709}, {"lang": "YAML", "code": 111199, "files": 20}, {"lang": "JavaScript", "code": 30682, "files": 2}, {"lang": "Protocol Buffers", "code": 7469, "files": 92}, {"lang": "HTML", "code": 2602, "files": 3}, {"lang": "Python", "code": 1271, "files": 4}, {"lang": "Bourne Shell", "code": 619, "files": 12}, {"lang": "make", "code": 217, "files": 1}, {"lang": "Markdown", "code": 109, "files": 3}, {"lang": "Dockerfile", "code": 49, "files": 2}, {"lang": "SVG", "code": 8, "files": 1}, {"lang": "Text", "code": 3, "files": 1}]}, {"name": "comdex-rwa", "path": "/Users/dheerajdubey/Documents/code-repository/comdex-rwa", "remote": "https://github.com/comdex-official/comdex-rwa.git", "owner": "comdex-official", "github_repo": "comdex-rwa", "html_url": "https://github.com/comdex-official/comdex-rwa", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/comdex-rwa/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/comdex-rwa/README.md", "description": null, "fork": false, "archived": false, "stars": 0, "gh_forks": 0, "open_issues": 0, "pushed_at": "2024-05-22T12:17:50Z", "created_at": "2024-01-09T05:00:41Z", "default_branch": "development", "n_files": 77, "blank": 900, "comment": 611, "code": 5254, "commits": 15, "contributors": 3, "by_month": {}, "languages": [{"lang": "Rust", "code": 3691, "files": 49}, {"lang": "YAML", "code": 621, "files": 3}, {"lang": "Markdown", "code": 565, "files": 9}, {"lang": "TOML", "code": 183, "files": 9}, {"lang": "Bourne Shell", "code": 176, "files": 4}, {"lang": "INI", "code": 12, "files": 1}, {"lang": "Text", "code": 6, "files": 2}]}, {"name": "commodo-frontend", "path": "/Users/dheerajdubey/Documents/code-repository/commodo-frontend", "remote": "https://github.com/comdex-official/commodo-frontend.git", "owner": "comdex-official", "github_repo": "commodo-frontend", "html_url": "https://github.com/comdex-official/commodo-frontend", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/commodo-frontend/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/commodo-frontend/README.md", "description": null, "fork": false, "archived": false, "stars": 0, "gh_forks": 4, "open_issues": 3, "pushed_at": "2024-02-23T14:00:51Z", "created_at": "2022-05-10T09:57:38Z", "default_branch": "development", "n_files": 244, "blank": 3487, "comment": 1327, "code": 45591, "commits": 1444, "contributors": 15, "by_month": {}, "languages": [{"lang": "JavaScript", "code": 26230, "files": 164}, {"lang": "SCSS", "code": 11352, "files": 39}, {"lang": "SVG", "code": 7209, "files": 33}, {"lang": "HTML", "code": 728, "files": 2}, {"lang": "Bourne Shell", "code": 48, "files": 2}, {"lang": "YAML", "code": 14, "files": 1}, {"lang": "Markdown", "code": 7, "files": 1}, {"lang": "Text", "code": 3, "files": 1}, {"lang": "TypeScript", "code": 0, "files": 1}]}, {"name": "gov-contracts", "path": "/Users/dheerajdubey/Documents/code-repository/gov-contracts", "remote": "https://github.com/comdex-official/gov-contracts.git", "owner": "comdex-official", "github_repo": "gov-contracts", "html_url": "https://github.com/comdex-official/gov-contracts", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/gov-contracts/blob/main/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/gov-contracts/README.md", "description": null, "fork": false, "archived": false, "stars": 0, "gh_forks": 5, "open_issues": 1, "pushed_at": "2023-07-04T03:55:48Z", "created_at": "2022-05-31T16:20:49Z", "default_branch": "main", "n_files": 75, "blank": 2169, "comment": 1300, "code": 13534, "commits": 88, "contributors": 5, "by_month": {}, "languages": [{"lang": "Rust", "code": 11940, "files": 56}, {"lang": "Markdown", "code": 1191, "files": 7}, {"lang": "TOML", "code": 166, "files": 7}, {"lang": "YAML", "code": 159, "files": 1}, {"lang": "Bourne Shell", "code": 78, "files": 4}]}, {"name": "harbor-frontend", "path": "/Users/dheerajdubey/Documents/code-repository/harbor-frontend", "remote": "https://github.com/comdex-official/harbor-frontend.git", "owner": "comdex-official", "github_repo": "harbor-frontend", "html_url": "https://github.com/comdex-official/harbor-frontend", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/harbor-frontend/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/harbor-frontend/README.md", "description": null, "fork": false, "archived": false, "stars": 0, "gh_forks": 3, "open_issues": 12, "pushed_at": "2024-05-23T07:49:33Z", "created_at": "2022-04-28T09:38:15Z", "default_branch": "development", "n_files": 265, "blank": 3713, "comment": 837, "code": 54650, "commits": 1541, "contributors": 15, "by_month": {"2024-05": 3}, "languages": [{"lang": "JavaScript", "code": 27578, "files": 205}, {"lang": "SCSS", "code": 13178, "files": 47}, {"lang": "SVG", "code": 12854, "files": 7}, {"lang": "HTML", "code": 1019, "files": 2}, {"lang": "YAML", "code": 14, "files": 1}, {"lang": "Dockerfile", "code": 3, "files": 1}, {"lang": "Text", "code": 3, "files": 1}, {"lang": "Markdown", "code": 1, "files": 1}]}, {"name": "locking-contract", "path": "/Users/dheerajdubey/Documents/code-repository/locking-contract", "remote": "https://github.com/comdex-official/locking-contract.git", "owner": "comdex-official", "github_repo": "locking-contract", "html_url": "https://github.com/comdex-official/locking-contract", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/locking-contract/blob/main/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/locking-contract/README.md", "description": null, "fork": false, "archived": false, "stars": 0, "gh_forks": 3, "open_issues": 1, "pushed_at": "2023-06-30T15:55:35Z", "created_at": "2022-08-02T16:03:24Z", "default_branch": "main", "n_files": 37, "blank": 1129, "comment": 563, "code": 6895, "commits": 152, "contributors": 6, "by_month": {}, "languages": [{"lang": "Rust", "code": 5560, "files": 22}, {"lang": "Markdown", "code": 815, "files": 8}, {"lang": "TypeScript", "code": 290, "files": 1}, {"lang": "TOML", "code": 110, "files": 3}, {"lang": "YAML", "code": 94, "files": 2}, {"lang": "Bourne Shell", "code": 26, "files": 1}]}, {"name": "raw-frontend", "path": "/Users/dheerajdubey/Documents/code-repository/raw-frontend", "remote": "https://github.com/comdex-official/raw-frontend.git", "owner": "comdex-official", "github_repo": "raw-frontend", "html_url": "https://github.com/comdex-official/raw-frontend", "readme_filename": "README.md", "readme_github_url": "https://github.com/comdex-official/raw-frontend/blob/development/README.md", "readme_local_uri": "file:///Users/dheerajdubey/Documents/code-repository/raw-frontend/README.md", "description": null, "fork": null, "archived": null, "stars": null, "gh_forks": null, "open_issues": null, "pushed_at": null, "created_at": null, "default_branch": null, "n_files": 137, "blank": 2172, "comment": 1479, "code": 18152, "commits": 203, "contributors": 4, "by_month": {"2024-04": 35}, "languages": [{"lang": "SCSS", "code": 9330, "files": 20}, {"lang": "JavaScript", "code": 8537, "files": 95}, {"lang": "SVG", "code": 227, "files": 19}, {"lang": "Markdown", "code": 38, "files": 1}, {"lang": "HTML", "code": 17, "files": 1}, {"lang": "Text", "code": 3, "files": 1}]}]}</script>
+  <script>
+    const DATA = JSON.parse(document.getElementById("payload").textContent);
+
+    const monthsSet = new Set();
+    for (const r of DATA.repos) {
+      Object.keys(r.by_month || {}).forEach(m => monthsSet.add(m));
+    }
+    const months = Array.from(monthsSet).sort();
+    const palette = [
+      "#58a6ff","#3fb950","#a371f7","#d29922","#f85149","#79c0ff",
+      "#7ee787","#d2a8ff","#ffa657","#ff7b72","#56d364","#db61a2"
+    ];
+
+    const allByMonth = months.map(m => DATA.repos.reduce((s,r) => s + ((r.by_month||{})[m]||0), 0));
+    new Chart(document.getElementById("chartAll"), {
+      type: "line",
+      data: {
+        labels: months,
+        datasets: [{
+          label: "Commits / month",
+          data: allByMonth,
+          borderColor: "#58a6ff",
+          backgroundColor: "rgba(88,166,255,0.15)",
+          fill: true,
+          tension: 0.25,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { maxRotation: 45, minRotation: 45 } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+
+    const locRepos = [...DATA.repos].sort((a,b) => b.code - a.code);
+    new Chart(document.getElementById("chartLoc"), {
+      type: "bar",
+      data: {
+        labels: locRepos.map(r => r.name),
+        datasets: [{
+          label: "Lines of code",
+          data: locRepos.map(r => r.code),
+          backgroundColor: locRepos.map((_,i) => palette[i % palette.length]),
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: "y",
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true } }
+      }
+    });
+
+    const langs = DATA.aggregate.languages_top || [];
+    new Chart(document.getElementById("chartLang"), {
+      type: "doughnut",
+      data: {
+        labels: langs.map(x => x.lang),
+        datasets: [{
+          data: langs.map(x => x.code),
+          backgroundColor: langs.map((_,i) => palette[i % palette.length]),
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "right", labels: { boxWidth: 12, font: { size: 11 } } },
+        }
+      }
+    });
+
+    const tb = document.getElementById("tbody");
+    for (const r of DATA.repos.sort((a,b) => a.name.localeCompare(b.name))) {
+      const tr = document.createElement("tr");
+      const fork = r.fork === true ? '<span class="badge yes">fork</span>' : (r.fork === false ? '<span class="badge">upstream</span>' : "—");
+      const arch = r.archived === true ? '<span class="badge arch">yes</span>' : (r.archived === false ? '<span class="badge">no</span>' : "—");
+      const link = r.html_url ? `<a href="${r.html_url}" target="_blank" rel="noopener">${r.github_repo || r.name}</a>` : escapeHtml(r.name);
+      const stars = r.stars != null ? r.stars.toLocaleString() : "—";
+      const ghForks = r.gh_forks != null ? r.gh_forks.toLocaleString() : "—";
+      const docParts = [];
+      const readmeLabel = r.readme_filename || "README.md";
+      if (r.readme_github_url) {
+        docParts.push(`<a href="${escapeHtml(r.readme_github_url)}" target="_blank" rel="noopener">${escapeHtml(readmeLabel)} (GitHub)</a>`);
+      }
+      if (r.readme_local_uri) {
+        docParts.push(`<a href="${escapeHtml(r.readme_local_uri)}">${escapeHtml(readmeLabel)} (local)</a>`);
+      }
+      const docCell = docParts.length
+        ? `<div class="doc-links">${docParts.join(" · ")}</div>`
+        : '<span style="color:var(--muted)">—</span>';
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(r.name)}</strong><div style="font-size:0.8rem;color:var(--muted);margin-top:0.25rem">${r.description ? escapeHtml(r.description) : ""}</div></td>
+        <td>${docCell}</td>
+        <td>${link}</td>
+        <td>${fork}</td>
+        <td>${arch}</td>
+        <td>${stars}</td>
+        <td>${ghForks}</td>
+        <td>${r.commits.toLocaleString()}</td>
+        <td>${r.contributors.toLocaleString()}</td>
+        <td>${r.n_files.toLocaleString()}</td>
+        <td>${r.code.toLocaleString()}</td>
+        <td>${r.pushed_at ? escapeHtml(r.pushed_at) : "—"}</td>`;
+      tb.appendChild(tr);
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    const wrap = document.getElementById("perRepoCharts");
+    let repoChartN = 0;
+    DATA.repos.sort((a,b) => a.name.localeCompare(b.name)).forEach((r) => {
+      const ms = Object.keys(r.by_month || {}).sort();
+      if (!ms.length) return;
+      const cid = repoChartN++;
+      const sec = document.createElement("section");
+      sec.style.marginBottom = "1.5rem";
+      sec.innerHTML = `<h3 style="font-size:1rem;margin:0 0 0.5rem">${escapeHtml(r.name)}</h3><div class="chart-box" style="height:220px"><canvas id="repoC${cid}"></canvas></div>`;
+      wrap.appendChild(sec);
+      const ctx = document.getElementById("repoC" + cid);
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ms,
+          datasets: [{
+            label: "Commits",
+            data: ms.map(m => r.by_month[m]),
+            backgroundColor: palette[cid % palette.length],
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { maxRotation: 60, minRotation: 60, font: { size: 10 } } },
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
